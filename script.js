@@ -253,11 +253,23 @@ const word = [
   "yawn",
   "zinc",
 ];
+const textContainer = document.getElementById("text-container");
+const timer = document.getElementById("timer");
+const tryAgeain = document.getElementById("try-again");
+const finalScore = document.getElementById("final-score");
+
 // shuffel the words array
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); // Corrected random index calculation
-    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
+function GenerateLongText() {
+  const shuffledWords = shuffleArray([...word]);
+  return shuffledWords.join(" ");
+}
+let longText = GenerateLongText();
+console.log(longText);
+textContainer.innerHTML = longText;
