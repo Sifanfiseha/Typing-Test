@@ -257,8 +257,10 @@ const textContainer = document.getElementById("text-container");
 const timer = document.getElementById("timer");
 const tryAgeain = document.getElementById("try-again");
 const finalScore = document.getElementById("final-score");
+let errors = 0;
+let longText = GenerateLongText();
+textContainer.innerHTML = longText;
 
-// shuffel the words array
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -266,10 +268,49 @@ function shuffleArray(array) {
   }
   return array;
 }
+1;
 function GenerateLongText() {
   const shuffledWords = shuffleArray([...word]);
   return shuffledWords.join(" ");
 }
-let longText = GenerateLongText();
-console.log(longText);
-textContainer.innerHTML = longText;
+let totalTyped = "";
+let currentCharIndex = 0;
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Backspace") {
+    if (totalTyped.length > 0) {
+      totalTyped = totalTyped.slice(0, -1);
+      currentCharIndex = Math.max(currentCharIndex - 1, 0);
+    }
+  } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+    totalTyped += e.key;
+    currentCharIndex++;
+  }
+  const textArray = longText.split("");
+
+  textContainer.innerText = "";
+  for (let i = 0; i < textArray.length; i++) {
+    const span = document.createElement("span");
+    if (i < totalTyped.length) {
+      if (totalTyped[i] === textArray[i]) {
+        span.classList.add("correct");
+      } else {
+        span.classList.add("error");
+        errors++;
+      }
+    }
+    span.textContent = textArray[i];
+    textContainer.append(span);
+  }
+  // scroll container
+  if (totalTyped.length > 20) {
+    const charWidth = 14; // Approximate width of each character in pixels
+    const maxVisibleChars = 20; // Maximum number of characters visible without scrolling
+    const scrollAmount = (totalTyped.length - maxVisibleChars) * charWidth;
+
+    if (textContainer) {
+      // Ensure textContainer exists
+      textContainer.scrollLeft = scrollAmount;
+    }
+  }
+});
+console.log("we are venom!");
